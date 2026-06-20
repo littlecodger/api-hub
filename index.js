@@ -29,7 +29,7 @@ try {
 }
 
 // === 配置 ===
-const PORT = process.env.PORT || 3000;
+const PORT = 3000;
 const DB_FILE = './data/users.json';
 const USAGE_FILE = './data/usage.json';
 
