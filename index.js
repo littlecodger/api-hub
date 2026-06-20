@@ -147,19 +147,36 @@ function jsonResponse(res, status, data) {
   res.end(JSON.stringify(data));
 }
 
+function htmlResponse(res, content) {
+  res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' });
+  res.end(content);
+}
+
 async function handleRequest(req, res, body) {
   const url = new URL(req.url, `http://${req.headers.host}`);
-  const path = url.pathname;
+  const route = url.pathname;
 
   // === 路由 ===
 
+  const __public = path.join(__dirname, 'public');
+
+  // 静态页面
+  if (route === '/chat' || route === '/chat.html') {
+    return htmlResponse(res, readFileSync(path.join(__public, 'chat.html'), 'utf-8'));
+  }
+
   // 健康检查
-  if (path === '/health' || path === '/') {
+  if (route === '/health') {
     return jsonResponse(res, 200, { status: 'ok', version: '0.1.0' });
   }
 
+  // 首页
+  if (route === '/') {
+    return htmlResponse(res, readFileSync(path.join(__public, 'index.html'), 'utf-8'));
+  }
+
   // 模型列表（兼容OpenAI格式）
-  if (path === '/v1/models') {
+  if (route === '/v1/models') {
     const models = Object.keys(BACKENDS).map(id => ({
       id, object: 'model', created: Math.floor(Date.now() / 1000),
       owned_by: 'api-hub',
