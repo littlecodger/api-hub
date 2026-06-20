@@ -1,0 +1,15 @@
+name = "api-hub"
+main = "worker.js"
+compatibility_date = "2025-12-01"
+
+# DeepSeek API Key（部署前设置）
+# npx wrangler secret put DEEPSEEK_KEY
+
+# KV 命名空间（存用户数据，先创建后绑定）
+# npx wrangler kv:namespace create "API_HUB_USERS"
+[[kv_namespaces]]
+binding = "USERS_KV"
+id = "YOUR_KV_NAMESPACE_ID"
+
+[vars]
+# 环境变量（非敏感信息）

@@ -1,0 +1,14 @@
+{
+  "name": "api-hub",
+  "version": "0.1.0",
+  "description": "AI API聚合中转服务 - 兼容OpenAI格式",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js",
+    "start": "node index.js",
+    "deploy:cf": "npx wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.102.0"
+  }
+}

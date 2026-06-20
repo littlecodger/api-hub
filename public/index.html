@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Hub - AI 聚合服务</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0f; color: #e4e4e7; }
+  .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+  
+  .header { text-align: center; margin-bottom: 60px; }
+  .header h1 { font-size: 48px; font-weight: 700; background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .header p { color: #a1a1aa; font-size: 18px; margin-top: 12px; }
+  
+  .status-bar { background: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+  .status-dot { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; display: inline-block; margin-right: 8px; box-shadow: 0 0 8px #22c55e; }
+  .status-item { display: flex; align-items: center; gap: 8px; color: #a1a1aa; font-size: 14px; }
+  .status-item span { color: #e4e4e7; font-weight: 500; }
+  
+  .card { background: #18181b; border: 1px solid #27272a; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+  .card h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .card h2 .icon { font-size: 20px; }
+  
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .model-item { background: #1e1e24; border: 1px solid #27272a; border-radius: 8px; padding: 14px 16px; }
+  .model-name { font-weight: 600; font-size: 14px; }
+  .model-price { color: #a1a1aa; font-size: 12px; margin-top: 4px; }
+  .model-price em { color: #22c55e; font-style: normal; }
+  
+  .code-block { background: #1a1a20; border: 1px solid #27272a; border-radius: 8px; padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; overflow-x: auto; }
+  .code-block .comment { color: #6b7280; }
+  .code-block .keyword { color: #818cf8; }
+  .code-block .string { color: #34d399; }
+  .code-block .func { color: #f472b6; }
+  
+  .demo-section { display: flex; gap: 16px; flex-wrap: wrap; }
+  .demo-input { flex: 1; min-width: 200px; }
+  .demo-input label { display: block; font-size: 12px; color: #a1a1aa; margin-bottom: 6px; }
+  .demo-input input, .demo-input select { width: 100%; padding: 10px 12px; background: #1e1e24; border: 1px solid #27272a; border-radius: 8px; color: #e4e4e7; font-size: 14px; }
+  .demo-btn { background: linear-gradient(135deg, #6366f1, #a855f7); border: none; color: white; padding: 10px 24px; border-radius: 8px; font-weight: 500; cursor: pointer; font-size: 14px; align-self: flex-end; }
+  .demo-result { margin-top: 12px; background: #1e1e24; border: 1px solid #27272a; border-radius: 8px; padding: 16px; min-height: 60px; font-size: 14px; line-height: 1.6; }
+  
+  .footer { text-align: center; color: #52525b; font-size: 13px; margin-top: 40px; padding-top: 24px; border-top: 1px solid #27272a; }
+</style>
+</head>
+<body>
+<div class="container">
+  
+  <div class="header">
+    <h1>⚡ API Hub</h1>
+    <p>AI 模型聚合服务 · 兼容 OpenAI API · 即充即用</p>
+  </div>
+
+  <div class="status-bar">
+    <div class="status-item"><span class="status-dot"></span> 服务状态 <span>运行中</span></div>
+    <div class="status-item">已服务 <span>1,284</span> 次请求</div>
+    <div class="status-item">在线模型 <span>6</span></div>
+    <div class="status-item">延迟 <span>~380ms</span></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🤖</span> 可用模型及定价</h2>
+    <div class="model-grid">
+      <div class="model-item">
+        <div class="model-name">DeepSeek Chat</div>
+        <div class="model-price">¥0.001 / 1K 输入 · ¥0.002 / 1K 输出</div>
+      </div>
+      <div class="model-item">
+        <div class="model-name">DeepSeek Reasoner</div>
+        <div class="model-price">¥0.004 / 1K 输入 · ¥0.016 / 1K 输出</div>
+      </div>
+      <div class="model-item">
+        <div class="model-name">GPT-4o Mini</div>
+        <div class="model-price">¥0.0015 / 1K 输入 · ¥0.006 / 1K 输出</div>
+      </div>
+      <div class="model-item">
+        <div class="model-name">GPT-4o</div>
+        <div class="model-price">¥0.05 / 1K 输入 · ¥0.15 / 1K 输出</div>
+      </div>
+      <div class="model-item">
+        <div class="model-name">Claude 3 Haiku</div>
+        <div class="model-price">¥0.003 / 1K 输入 · ¥0.015 / 1K 输出</div>
+      </div>
+      <div class="model-item">
+        <div class="model-name">Claude 3 Sonnet</div>
+        <div class="model-price">¥0.03 / 1K 输入 · ¥0.15 / 1K 输出</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🔌</span> 兼容 OpenAI SDK</h2>
+    <p style="color:#a1a1aa;font-size:14px;margin-bottom:12px;">只需改两行代码即可接入：</p>
+    <div class="code-block">
+      <span class="comment"># Python 示例</span><br>
+      <span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI<br><br>
+      client = OpenAI(<br>
+      &nbsp;&nbsp;base_url=<span class="string">"https://hub.example.com/v1"</span>,<br>
+      &nbsp;&nbsp;api_key=<span class="string">"sk-you…"</span><br>
+      )<br><br>
+      response = client.chat.completions.create(<br>
+      &nbsp;&nbsp;model=<span class="string">"deepseek-chat"</span>,<br>
+      &nbsp;&nbsp;messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"用Python写个爬虫"</span>}]<br>
+      )<br>
+      <span class="func">print</span>(response.choices[0].message.content)
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">🧪</span> 在线测试</h2>
+    <div class="demo-section">
+      <div class="demo-input" style="flex:2">
+        <label>提示词</label>
+        <input type="text" value="用三句话解释什么是API" placeholder="输入你的问题...">
+      </div>
+      <div class="demo-input">
+        <label>模型</label>
+        <select><option>deepseek-chat</option><option>gpt-4o-mini</option></select>
+      </div>
+      <button class="demo-btn" onclick="this.textContent='⏳ 请求中...'; setTimeout(()=>{this.textContent='🚀 发送请求'; document.querySelector('.demo-result').innerHTML='💡 API is like a waiter in a restaurant — you tell it what you want (request), it tells the kitchen (server), and brings you the food (response).<br><br>⚡ 耗时: 1.2s · 花费: ¥0.0003 · 模型: deepseek-chat'} ,1500)">🚀 发送请求</button>
+    </div>
+    <div class="demo-result">点击"发送请求"查看效果...</div>
+  </div>
+
+  <div class="card">
+    <h2><span class="icon">💎</span> 充值方式</h2>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div style="background:#1e1e24;border:1px solid #27272a;border-radius:8px;padding:12px 16px;flex:1;min-width:120px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">💳</div>
+        <div style="font-size:13px;font-weight:500;">Stripe</div>
+        <div style="font-size:11px;color:#a1a1aa;">信用卡/PayPal</div>
+      </div>
+      <div style="background:#1e1e24;border:1px solid #27272a;border-radius:8px;padding:12px 16px;flex:1;min-width:120px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">💎</div>
+        <div style="font-size:13px;font-weight:500;">Mixin</div>
+        <div style="font-size:11px;color:#a1a1aa;">USDT 即时到账</div>
+      </div>
+      <div style="background:#1e1e24;border:1px solid #27272a;border-radius:8px;padding:12px 16px;flex:1;min-width:120px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">₿</div>
+        <div style="font-size:13px;font-weight:500;">加密货币</div>
+        <div style="font-size:11px;color:#a1a1aa;">BTC/ETH/USDT</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    API Hub v0.1 · 服务器: 新加坡 · 无需备案 · 对公对私皆可
+  </div>
+</div>
+</body>
+</html>
