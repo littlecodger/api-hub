@@ -6,7 +6,6 @@ import http from 'http';
 import https from 'https';
 import crypto from 'crypto';
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
-import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -272,4 +271,4 @@ console.log(`   curl http://localhost:${PORT}/v1/chat/completions \\`);
 console.log(`     -H "Authorization: Bearer <your-key>" \\`);
 console.log(`     -d '{"model":"deepseek-chat","messages":[{"role":"user","content":"hi"}]}'`);
 
-server.listen(PORT);
+server.listen(PORT, '0.0.0.0');
