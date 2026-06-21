@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>API Hub - AI 聚合服务</title>
+<title>API Hub - AI Model Aggregation Service</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0f; color: #e4e4e7; }
@@ -42,6 +42,21 @@
   .demo-result { margin-top: 12px; background: #1e1e24; border: 1px solid #27272a; border-radius: 8px; padding: 16px; min-height: 60px; font-size: 14px; line-height: 1.6; }
   
   .footer { text-align: center; color: #52525b; font-size: 13px; margin-top: 40px; padding-top: 24px; border-top: 1px solid #27272a; }
+  
+  .signup-card { background: linear-gradient(135deg, #18181b, #1e1a2e); border: 1px solid #3730a3; border-radius: 12px; padding: 32px; margin-bottom: 24px; text-align: center; position: relative; overflow: hidden; }
+  .signup-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(99,102,241,0.05) 0%, transparent 70%); pointer-events: none; }
+  .signup-card h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .signup-card p { color: #a1a1aa; font-size: 14px; margin-bottom: 20px; }
+  .signup-form { display: flex; gap: 12px; max-width: 480px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .signup-form input { flex: 1; min-width: 200px; padding: 12px 16px; background: #1e1e24; border: 1px solid #3730a3; border-radius: 8px; color: #e4e4e7; font-size: 14px; outline: none; }
+  .signup-form input:focus { border-color: #6366f1; box-shadow: 0 0 0 2px rgba(99,102,241,0.2); }
+  .signup-form button { background: linear-gradient(135deg, #6366f1, #a855f7); border: none; color: white; padding: 12px 28px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; white-space: nowrap; }
+  .signup-form button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .signup-result { margin-top: 16px; padding: 12px; border-radius: 8px; font-size: 13px; display: none; }
+  .signup-result.success { display: block; background: #1a3a1a; border: 1px solid #22c55e; color: #86efac; }
+  .signup-result.error { display: block; background: #3a1a1a; border: 1px solid #ef4444; color: #fca5a5; }
+  .key-display { background: #0a0a0f; border: 1px solid #3730a3; border-radius: 6px; padding: 10px 14px; font-family: monospace; font-size: 12px; color: #a78bfa; word-break: break-all; margin: 8px 0; user-select: all; }
+  .copy-btn { background: #2f2f2f; border: 1px solid #404040; color: #e4e4e7; padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; margin-top: 4px; }
 </style>
 </head>
 <body>
@@ -49,103 +64,157 @@
   
   <div class="header">
     <h1>⚡ API Hub</h1>
-    <p>AI 模型聚合服务 · 兼容 OpenAI API · 即充即用</p>
+    <p>AI Model Aggregation · OpenAI Compatible · Pay-as-You-Go</p>
   </div>
 
   <div class="status-bar">
-    <div class="status-item"><span class="status-dot"></span> 服务状态 <span>运行中</span></div>
-    <div class="status-item">已服务 <span>1,284</span> 次请求</div>
-    <div class="status-item">在线模型 <span>6</span></div>
-    <div class="status-item">延迟 <span>~380ms</span></div>
+    <div class="status-item"><span class="status-dot"></span> Service Status <span>Online</span></div>
+    <div class="status-item">Served <span>1,284</span> requests</div>
+    <div class="status-item">Active Models <span>6</span></div>
+    <div class="status-item">Avg Latency <span>~380ms</span></div>
   </div>
 
   <div class="card">
-    <h2><span class="icon">🤖</span> 可用模型及定价</h2>
+    <h2><span class="icon">🤖</span> Models &amp; Pricing</h2>
     <div class="model-grid">
       <div class="model-item">
-        <div class="model-name">DeepSeek Chat</div>
-        <div class="model-price">¥0.001 / 1K 输入 · ¥0.002 / 1K 输出</div>
+        <div class="model-name">DeepSeek V4 Flash</div>
+        <div class="model-price">$0.014 / 1M input · $0.028 / 1M output</div>
       </div>
       <div class="model-item">
-        <div class="model-name">DeepSeek Reasoner</div>
-        <div class="model-price">¥0.004 / 1K 输入 · ¥0.016 / 1K 输出</div>
+        <div class="model-name">DeepSeek V4 Pro</div>
+        <div class="model-price">$0.055 / 1M input · $0.22 / 1M output</div>
       </div>
       <div class="model-item">
         <div class="model-name">GPT-4o Mini</div>
-        <div class="model-price">¥0.0015 / 1K 输入 · ¥0.006 / 1K 输出</div>
+        <div class="model-price">$0.021 / 1M input · $0.083 / 1M output</div>
       </div>
       <div class="model-item">
         <div class="model-name">GPT-4o</div>
-        <div class="model-price">¥0.05 / 1K 输入 · ¥0.15 / 1K 输出</div>
+        <div class="model-price">$0.69 / 1M input · $2.07 / 1M output</div>
       </div>
       <div class="model-item">
         <div class="model-name">Claude 3 Haiku</div>
-        <div class="model-price">¥0.003 / 1K 输入 · ¥0.015 / 1K 输出</div>
+        <div class="model-price">$0.041 / 1M input · $0.207 / 1M output</div>
       </div>
       <div class="model-item">
         <div class="model-name">Claude 3 Sonnet</div>
-        <div class="model-price">¥0.03 / 1K 输入 · ¥0.15 / 1K 输出</div>
+        <div class="model-price">$0.414 / 1M input · $2.07 / 1M output</div>
       </div>
     </div>
   </div>
 
+  <div class="signup-card">
+    <h2>🚀 Get Started Free</h2>
+    <p>Enter your email to get an API key and <strong>$0.50 free credit</strong> — no credit card required.</p>
+    <div class="signup-form">
+      <input type="email" id="signupEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')register()">
+      <button id="signupBtn" onclick="register()">Get API Key →</button>
+    </div>
+    <div class="signup-result" id="signupResult"></div>
+  </div>
+
+  <script>
+  async function register() {
+    const email = document.getElementById('signupEmail').value.trim();
+    const btn = document.getElementById('signupBtn');
+    const result = document.getElementById('signupResult');
+    
+    if (!email || !email.includes('@')) {
+      result.className = 'signup-result error';
+      result.innerHTML = '❌ Please enter a valid email address';
+      return;
+    }
+    
+    btn.disabled = true;
+    btn.textContent = '⏳ Creating...';
+    result.style.display = 'none';
+    
+    try {
+      const resp = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await resp.json();
+      
+      if (resp.ok && data.success) {
+        result.className = 'signup-result success';
+        result.innerHTML = '<div>✅ Account created! Your API Key:</div>'
+          + '<div class="key-display">' + data.api_key + '</div>'
+          + '<div>💰 Balance: <strong>$' + data.balance.toFixed(2) + '</strong> free credit</div>'
+          + '<br><div style="font-size:12px;color:#a1a1aa;">💡 Save this key — you won\'t see it again!</div>';
+      } else {
+        result.className = 'signup-result error';
+        result.innerHTML = '❌ ' + (data.error?.message || 'Registration failed');
+      }
+    } catch(e) {
+      result.className = 'signup-result error';
+      result.innerHTML = '❌ Network error: ' + e.message;
+    }
+    
+    btn.disabled = false;
+    btn.textContent = 'Get API Key →';
+  }
+  </script>
+
   <div class="card">
-    <h2><span class="icon">🔌</span> 兼容 OpenAI SDK</h2>
-    <p style="color:#a1a1aa;font-size:14px;margin-bottom:12px;">只需改两行代码即可接入：</p>
+    <h2><span class="icon">🔌</span> OpenAI SDK Compatible</h2>
+    <p style="color:#a1a1aa;font-size:14px;margin-bottom:12px;">Just change two lines to get started:</p>
     <div class="code-block">
-      <span class="comment"># Python 示例</span><br>
+      <span class="comment"># Python example</span><br>
       <span class="keyword">from</span> openai <span class="keyword">import</span> OpenAI<br><br>
       client = OpenAI(<br>
       &nbsp;&nbsp;base_url=<span class="string">"https://hub.example.com/v1"</span>,<br>
-      &nbsp;&nbsp;api_key=<span class="string">"sk-you…"</span><br>
+      &nbsp;&nbsp;api_key=<span class="string">"sk-your-api-key"</span><br>
       )<br><br>
       response = client.chat.completions.create(<br>
-      &nbsp;&nbsp;model=<span class="string">"deepseek-chat"</span>,<br>
-      &nbsp;&nbsp;messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"用Python写个爬虫"</span>}]<br>
+      &nbsp;&nbsp;model=<span class="string">"deepseek-v4-flash"</span>,<br>
+      &nbsp;&nbsp;messages=[{<span class="string">"role"</span>: <span class="string">"user"</span>, <span class="string">"content"</span>: <span class="string">"Write a Python web scraper"</span>}]<br>
       )<br>
       <span class="func">print</span>(response.choices[0].message.content)
     </div>
   </div>
 
   <div class="card">
-    <h2><span class="icon">🧪</span> 在线测试</h2>
+    <h2><span class="icon">🧪</span> Live Demo</h2>
     <div class="demo-section">
       <div class="demo-input" style="flex:2">
-        <label>提示词</label>
-        <input type="text" value="用三句话解释什么是API" placeholder="输入你的问题...">
+        <label>Prompt</label>
+        <input type="text" value="Explain what an API is in three sentences" placeholder="Type your question...">
       </div>
       <div class="demo-input">
-        <label>模型</label>
-        <select><option>deepseek-chat</option><option>gpt-4o-mini</option></select>
+        <label>Model</label>
+        <select><option>deepseek-v4-flash</option><option>gpt-4o-mini</option></select>
       </div>
-      <button class="demo-btn" onclick="this.textContent='⏳ 请求中...'; setTimeout(()=>{this.textContent='🚀 发送请求'; document.querySelector('.demo-result').innerHTML='💡 API is like a waiter in a restaurant — you tell it what you want (request), it tells the kitchen (server), and brings you the food (response).<br><br>⚡ 耗时: 1.2s · 花费: ¥0.0003 · 模型: deepseek-chat'} ,1500)">🚀 发送请求</button>
+      <button class="demo-btn" onclick="this.textContent='⏳ Processing...'; setTimeout(()=>{this.textContent='🚀 Send Request'; document.querySelector('.demo-result').innerHTML='💡 API is like a waiter in a restaurant — you tell it what you want (request), it tells the kitchen (server), and brings you the food (response).<br><br>⚡ Time: 1.2s · Cost: $0.0003 · Model: deepseek-v4-flash'} ,1500)">🚀 Send Request</button>
     </div>
-    <div class="demo-result">点击"发送请求"查看效果...</div>
+    <div class="demo-result">Click "Send Request" to see the result...</div>
   </div>
 
   <div class="card">
-    <h2><span class="icon">💎</span> 充值方式</h2>
+    <h2><span class="icon">💎</span> Payment Methods</h2>
     <div style="display:flex;gap:12px;flex-wrap:wrap;">
       <div style="background:#1e1e24;border:1px solid #27272a;border-radius:8px;padding:12px 16px;flex:1;min-width:120px;text-align:center;">
         <div style="font-size:24px;margin-bottom:4px;">💳</div>
         <div style="font-size:13px;font-weight:500;">Stripe</div>
-        <div style="font-size:11px;color:#a1a1aa;">信用卡/PayPal</div>
+        <div style="font-size:11px;color:#a1a1aa;">Credit Card / PayPal</div>
       </div>
       <div style="background:#1e1e24;border:1px solid #27272a;border-radius:8px;padding:12px 16px;flex:1;min-width:120px;text-align:center;">
         <div style="font-size:24px;margin-bottom:4px;">💎</div>
-        <div style="font-size:13px;font-weight:500;">Mixin</div>
-        <div style="font-size:11px;color:#a1a1aa;">USDT 即时到账</div>
+        <div style="font-size:13px;font-weight:500;">USDT (Mixin)</div>
+        <div style="font-size:11px;color:#a1a1aa;">Instant via Mixin</div>
       </div>
       <div style="background:#1e1e24;border:1px solid #27272a;border-radius:8px;padding:12px 16px;flex:1;min-width:120px;text-align:center;">
         <div style="font-size:24px;margin-bottom:4px;">₿</div>
-        <div style="font-size:13px;font-weight:500;">加密货币</div>
+        <div style="font-size:13px;font-weight:500;">Cryptocurrency</div>
         <div style="font-size:11px;color:#a1a1aa;">BTC/ETH/USDT</div>
       </div>
     </div>
   </div>
 
   <div class="footer">
-    API Hub v0.1 · 服务器: 新加坡 · 无需备案 · 对公对私皆可
+    API Hub v0.1 · Singapore Server · No KYC Required · Business &amp; Personal OK
   </div>
 </div>
 </body>
