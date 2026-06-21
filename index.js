@@ -170,6 +170,45 @@ async function handleRequest(req, res, body) {
     return jsonResponse(res, 200, { status: 'ok', version: '0.1.0' });
   }
 
+  // 用户注册
+  if (route === '/api/register' && req.method === 'POST') {
+    try {
+      const { email } = JSON.parse(body);
+      if (!email || !email.includes('@')) {
+        return jsonResponse(res, 400, { error: { message: 'Invalid email address' } });
+      }
+      const users = readJSON(DB_FILE);
+      // 检查邮箱是否已注册
+      for (const [uid, u] of Object.entries(users)) {
+        if (u.email === email) {
+          return jsonResponse(res, 409, { error: { message: 'Email already registered' } });
+        }
+      }
+      // 创建新用户
+      const key = 'sk-' + crypto.randomBytes(24).toString('hex');
+      const id = 'u_' + crypto.randomBytes(4).toString('hex');
+      const trialBalance = 0.50; // $0.50 free trial
+      users[id] = {
+        name: email.split('@')[0],
+        email,
+        balance: trialBalance,
+        apiKeys: [key],
+        created: new Date().toISOString(),
+      };
+      writeJSON(DB_FILE, users);
+      console.log(`✅ 新用户注册: ${email} (${id})`);
+      return jsonResponse(res, 201, {
+        success: true,
+        api_key: key,
+        balance: trialBalance,
+        currency: 'USD',
+        message: 'Account created! $0.50 free trial added.',
+      });
+    } catch (e) {
+      return jsonResponse(res, 500, { error: { message: 'Registration failed: ' + e.message } });
+    }
+  }
+
   // 首页
   if (route === '/') {
     return htmlResponse(res, readFileSync(path.join(__public, 'index.html'), 'utf-8'));
@@ -190,7 +229,7 @@ async function handleRequest(req, res, body) {
     if (!apiKey) return jsonResponse(res, 401, { error: { message: 'Missing API key' } });
     const user = getUserByKey(apiKey);
     if (!user) return jsonResponse(res, 401, { error: { message: 'Invalid API key' } });
-    return jsonResponse(res, 200, { balance: user.balance || 0, currency: 'CNY' });
+    return jsonResponse(res, 200, { balance: user.balance || 0, currency: 'USD' });
   }
 
   // === 核心：Chat Completions ===
